@@ -1,0 +1,25 @@
+name: Auto Green Commit
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # 每天 UTC+0 时间 03:00 运行，等于北京时间上午11点
+  workflow_dispatch:
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Make fake change
+      run: |
+        echo "Last run: $(date)" > status.txt
+
+    - name: Commit changes
+      run: |
+        git config --global user.name "facaidada"
+        git config --global user.email "hedadada99@gmail.com"
+        git add .
+        git commit -m "chore: auto commit at $(date)" || echo "Nothing to commit"
+        git push
